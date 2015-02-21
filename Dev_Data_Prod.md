@@ -1,37 +1,61 @@
-Dev_Data_Prod.rpres
+   Temperature Tracker
 ========================================================
 author: rwokano
 date: 2/13/2015
+transition:rotate
+transition-speed:slow
 
-First Slide
+Shiny application developed for the Developing Data Products course via Coursera
+
+
+
+
+Vision
 ========================================================
+transition:fade
 
-For more details on authoring R presentations click the
-**Help** button on the toolbar.
+The company vision for the State Temperature Average Tracker (S.T.A.T.) application is to become the market leader for relocation service professionals as well as a recreational tool for use by the general public. We envision our users to be:
 
-- Bullet 1
-- Bullet 2
-- Bullet 3
+- Realtors
+- Relocation Service Professionals
+- Corporations
+- Individuals
 
-Slide With Code
+Database
 ========================================================
+transition:zoom
+Our data is collected from government resources such as NOAA, and then preprocessed for optimal performance in our online applications. Some of our stats include:
 
+Number of observations: 2063000  
+Data has been collected from 2746 unique stations.
 
-```r
-summary(cars)
-```
-
-```
-     speed           dist       
- Min.   : 4.0   Min.   :  2.00  
- 1st Qu.:12.0   1st Qu.: 26.00  
- Median :15.0   Median : 36.00  
- Mean   :15.4   Mean   : 42.98  
- 3rd Qu.:19.0   3rd Qu.: 56.00  
- Max.   :25.0   Max.   :120.00  
-```
-
-Slide With Plot
+Investors!
 ========================================================
+transition:linear
+type:alert
 
-![plot of chunk unnamed-chunk-2](Dev_Data_Prod-figure/unnamed-chunk-2-1.png) 
+We are seeking investors to help us build our brand.  We are looking to raise $2.1m of venture capital in order to  
+
+1. Enhance our computer network  
+2. Increase our dataset  
+3. Expand the range of data  
+  + Other parts of the world  
+  + Increase granularity from State to city level - or Lower!!
+ 
+
+
+Thank You!
+========================================================
+transition:concave
+type:prompt
+incremental: true
+
+Questions?
+
+Thank you for your interest in the S.T.A.T. application.  
+
+For investment opportunities please contact us at invest@stat-app.net
+
+For other information please contact us at info@stat-app.net
+
+
