@@ -26,8 +26,8 @@ Database
 transition:zoom
 Our data is collected from government resources such as NOAA, and then preprocessed for optimal performance in our online applications. Some of our stats include:
 
-Number of observations: 2063000  
-Data has been collected from 2746 unique stations.
+Number of observations: 1501038  
+Data has been collected from 2290 unique stations.
 
 Investors!
 ========================================================
@@ -41,6 +41,10 @@ We are seeking investors to help us build our brand.  We are looking to raise $2
 3. Expand the range of data  
   + Other parts of the world  
   + Increase granularity from State to city level - or Lower!!
+  
+See the demp app [here](http://rwokano.shinyapps.io/Temp_App)*
+
+[^* Demo app only has 2 years worth of data due to size limitations on the host]
  
 
 
