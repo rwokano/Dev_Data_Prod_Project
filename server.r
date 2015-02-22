@@ -2,6 +2,7 @@ library(shiny)
 library(ggplot2)
 
 ## Load the preprocessed datasets (Prepared by the UTILTY program)
+masterData<-NULL
 load("preparedData.rda")
 
 ## Load a list of states to use in the UI 
@@ -53,55 +54,71 @@ shinyServer
                            STATE==input$statelist))
       })
       
-  
+      aggSelected<-reactive(
+      {
+        switch(input$degrees,
+               "1" = aggregate(TempC~ObsDate,data=datasetSelect(),mean),
+               "2" = aggregate(Temp~ObsDate,data=datasetSelect(),mean))        
+      })
       
       ## For Testing
       output$test<-renderText(input$timeChoice)
       
       
       output$tempPlot <- renderPlot({
+        ## Prevents error while dynamic data is still loading
+        if(is.null(input$yearlist) )
+            return(NULL)
+        
         plotdata<-datasetSelect()
         if (is.data.frame(plotdata) & nrow(plotdata)>0){
-          agg<-switch(input$degrees,
-                      "1" = aggregate(TempC~ObsDate,data=plotdata,mean),
-                      "2" = aggregate(Temp~ObsDate,data=plotdata,mean))
+          agg<-aggSelected()
+          
           xaxis<-switch(input$timeChoice,
                         "1" = "Observation Date",
                         "2" = "Observation Year")
-          ## Create the plot that the user will see
           
-          qplot(ObsDate,
-                switch(input$degrees,
-                  "1" = TempC,
-                  "2" = Temp),
-                data=agg,
-                geom=c("point","smooth"),
-                main="Mean Daily Temperatures",
-                xlab=xaxis,
-                ylab="Mean Temperature")          
+          ## Create the plot that the user will see
+          ## suppress Warnings because the SMOOTH can give a message if
+          ## there are < 1000 points
+          switch(input$degrees,
+                 "1" = gr<-ggplot(agg, aes(x=ObsDate, y=TempC)),
+                 "2" = gr<-ggplot(agg, aes(x=ObsDate, y=Temp)))
+          
+          gr<-gr + geom_point()
+          gr<-gr + stat_smooth(method="loess")
+          gr<-gr + labs(title="Mean Daily Temperatures",
+                        x=xaxis,
+                        y="Mean Temperature")
+          
+          return(gr)
+          
         }
       })
       
       output$sampleStats<-renderTable({
-        plotdata<-datasetSelect()
-        statsData <- data.frame(Desc=character(), Value=numeric())        
-        if (is.data.frame(plotdata) & nrow(plotdata)>0){
-          if(input$degrees=="1"){
-            ## Celsius
-            statsData<-rbind(statsData,data.frame(Desc="Lowest Temp", Value=min(plotdata$TempC)))
-            statsData<-rbind(statsData,data.frame(Desc="Highest Temp", Value=max(plotdata$TempC)))
-            statsData<-rbind(statsData,data.frame(Desc="Average Temp", Value=mean(plotdata$TempC)))
-            statsData<-rbind(statsData,data.frame(Desc="Number of observations", Value=nrow(plotdata)))
-          }else
-          {
-            statsData<-rbind(statsData,data.frame(Desc="Lowest Temp", Value=min(plotdata$Temp)))
-            statsData<-rbind(statsData,data.frame(Desc="Highest Temp", Value=max(plotdata$Temp)))
-            statsData<-rbind(statsData,data.frame(Desc="Average Temp", Value=mean(plotdata$Temp)))
-            statsData<-rbind(statsData,data.frame(Desc="Number of observations", Value=nrow(plotdata)))            
+          ## Prevents error while dynamic data is still loading          
+          if(is.null(input$yearlist) )
+              return(NULL)          
+          plotdata<-datasetSelect()
+          statsData <- data.frame(Desc=character(), Value=numeric())        
+          if (is.data.frame(plotdata) & nrow(plotdata)>0){
+              if(input$degrees=="1"){
+                  ## Celsius
+                  statsData<-rbind(statsData,data.frame(Desc="Lowest Temp", Value=min(plotdata$TempC)))
+                  statsData<-rbind(statsData,data.frame(Desc="Highest Temp", Value=max(plotdata$TempC)))
+                  statsData<-rbind(statsData,data.frame(Desc="Average Temp", Value=mean(plotdata$TempC)))
+                  statsData<-rbind(statsData,data.frame(Desc="Number of observations", Value=nrow(plotdata)))
+              }else
+              {
+                  statsData<-rbind(statsData,data.frame(Desc="Lowest Temp", Value=min(plotdata$Temp)))
+                  statsData<-rbind(statsData,data.frame(Desc="Highest Temp", Value=max(plotdata$Temp)))
+                  statsData<-rbind(statsData,data.frame(Desc="Average Temp", Value=mean(plotdata$Temp)))
+                  statsData<-rbind(statsData,data.frame(Desc="Number of observations", Value=nrow(plotdata)))            
+              }
+              
           }
-          
-        }
-        statsData
+          statsData
       })
     }
 )
